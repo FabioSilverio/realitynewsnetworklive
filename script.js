@@ -2,21 +2,15 @@ const config = {
   xHandle: "faaretz",
   youtubeUrl: "https://www.youtube.com/@faaretz",
   liveUrl: "",
-  kickChannel: "faaretz"
+  kickChannel: "rsnnews"
 };
 
 // === SUPABASE CONFIG ===
-// 1. Crie um projeto gratuito em https://supabase.com
-// 2. Vá em Project Settings > API e copie URL + anon public key
-// 3. Cole abaixo e rode o conteúdo de setup-supabase.sql no SQL Editor
 const SUPABASE_URL = "https://bshealgoawnasmabiyjk.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzaGVhbGdvYXduYXNtYWJpeWprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczOTY2NDcsImV4cCI6MjA5Mjk3MjY0N30.RMU1KcJNrIMJjc3z2GYa7p7gVTLyY90BOH-pVnaOTJQ";
 
-const params = new URLSearchParams(window.location.search);
-const liveFromUrl = params.get("broadcast");
 const liveRoot = document.querySelector("[data-live]");
 const liveFrame = document.querySelector(".live-frame");
-const livePostMount = document.querySelector("[data-live-post]");
 const offlineState = document.querySelector("[data-offline]");
 const openXButtons = document.querySelectorAll("[data-open-x]");
 const openLink = document.querySelector("[data-open-link]");
@@ -32,166 +26,48 @@ const normalizeBroadcastUrl = (value) => {
 };
 
 const readLiveUrl = () => normalizeBroadcastUrl(localStorage.getItem(storageKey) || liveRoot?.dataset.liveSrc || config.liveUrl);
-const broadcastUrl = readLiveUrl();
 const fallbackXUrl = `https://x.com/${config.xHandle}`;
-const isRawBroadcastUrl = (url) => url.includes("/i/broadcasts/");
-const isKickUrl = (url) => url.includes("kick.com");
-const getBroadcastId = (url) => {
-  const m = url.match(/\/i\/broadcasts\/(\w+)/);
-  return m ? m[1] : "";
-};
-
-const getPostId = (url) => {
-  const match = url.match(/\/status(?:es)?\/(\d+)/);
-  return match ? match[1] : "";
-};
-
-const resetPostMount = () => {
-  if (!livePostMount) return;
-  livePostMount.hidden = true;
-  livePostMount.replaceChildren();
-};
 
 const showOffline = () => {
   liveRoot?.classList.remove("is-live");
   if (liveFrame) { liveFrame.hidden = true; liveFrame.removeAttribute("src"); }
-  resetPostMount();
   if (offlineState) offlineState.hidden = false;
   if (liveLabel) liveLabel.textContent = "Transmissao offline_";
 };
 
-const showPostEmbed = (url) => {
-  const postId = getPostId(url);
-  if (!liveRoot || !livePostMount || !postId || !window.twttr?.widgets?.createTweet) return false;
-  if (liveFrame) { liveFrame.hidden = true; liveFrame.removeAttribute("src"); }
-  livePostMount.hidden = false;
-  livePostMount.replaceChildren();
-  liveRoot.classList.add("is-live");
-  if (offlineState) offlineState.hidden = true;
-  if (liveLabel) liveLabel.textContent = "AO VIVO_";
-
-  window.twttr.widgets.createTweet(postId, livePostMount, {
-    align: "center", conversation: "none", dnt: true, theme: "dark", cards: "hidden"
-  }).then(() => {
-    // Tenta autoplay: clica no iframe depois de carregar
-    const iframe = livePostMount.querySelector("iframe");
-    if (iframe) {
-      iframe.style.width = "100%";
-      iframe.style.height = "100%";
-      iframe.allow = "autoplay; fullscreen; encrypted-media; picture-in-picture";
-      // Tenta forçar play via postMessage
-      window.setTimeout(() => {
-        try {
-          iframe.contentWindow?.postMessage({ type: "player:play" }, "*");
-        } catch {}
-      }, 2000);
-    }
-  }).catch(() => showOffline());
-
-  return true;
-};
-
-const showLive = (url) => {
-  if (!liveRoot || !liveFrame || !url) { showOffline(); return; }
-  resetPostMount();
-  liveFrame.src = url;
-  liveFrame.hidden = false;
-  offlineState.hidden = false;
-  liveRoot.classList.add("is-live");
-  if (liveLabel) liveLabel.textContent = "Transmissao conectada_";
-};
-
-const showKickFallback = () => {
+const showKickPlayer = () => {
   const kickPlayer = `https://player.kick.com/${config.kickChannel}`;
-  showLive(kickPlayer);
-};
-
-const showAoVivo = (xUrl) => {
-  // Carrega player do Kick direto
-  showKickFallback();
-  
-  // Mantem overlay sutil com link pro X
-  if (offlineState) {
-    offlineState.hidden = false;
-    // Forca visibilidade mesmo com is-live
-    offlineState.style.opacity = "1";
-    offlineState.style.pointerEvents = "auto";
-    offlineState.style.background = "rgba(0,0,0,0.6)";
-    
-    const h1 = offlineState.querySelector("h1");
-    if (h1) h1.textContent = "AO VIVO";
-    const p = offlineState.querySelector("p");
-    if (p) p.textContent = "Player via Kick. Clique abaixo para abrir no X.";
-    const a = offlineState.querySelector("a");
-    if (a) {
-      a.textContent = "Assistir no X";
-      a.href = xUrl;
-      a.style.position = "relative";
-      a.style.zIndex = "3";
-    }
-    // Esconde os aneis e o botao play (ja tem player)
-    const rings = offlineState.querySelector(".offline-state__rings");
-    if (rings) rings.hidden = true;
-    const playBtn = offlineState.querySelector(".play-button");
-    if (playBtn) playBtn.hidden = true;
+  if (liveFrame) {
+    liveFrame.src = kickPlayer;
+    liveFrame.hidden = false;
   }
-  
-  if (liveLabel) liveLabel.textContent = "AO VIVO — player via Kick_";
+  if (offlineState) offlineState.hidden = true;
+  liveRoot?.classList.add("is-live");
+  if (liveLabel) liveLabel.textContent = "AO VIVO — Kick_";
 };
 
 let lastLiveUrl = readLiveUrl();
 
-const bootLive = (targetUrl) => {
-  const url = normalizeBroadcastUrl(targetUrl || readLiveUrl());
-  if (!url) {
-    showOffline();
-    // Sem URL, tenta Kick direto
-    if (liveLabel) liveLabel.textContent = "Tentando Kick.com..._";
-    showKickFallback();
-    return;
-  }
-
-  if (openLink) openLink.href = url || fallbackXUrl;
-  openXButtons.forEach((btn) => { btn.onclick = () => window.open(url || fallbackXUrl, "_blank", "noopener,noreferrer"); });
-
-  // Kick.com — iframe direto
-  if (isKickUrl(url)) {
-    showLive(url);
-    return;
-  }
-
-  // Status do X — embed tweet com player da live ocupando o palco
-  if (getPostId(url)) {
-    if (showPostEmbed(url)) return;
-    window.setTimeout(() => showPostEmbed(url) || showAoVivo(url), 2500);
-    return;
-  }
-
-  // Broadcast do X (/i/broadcasts/) — instrui usar o link do post/status em vez disso
-  const broadcastId = getBroadcastId(url);
-  if (broadcastId) {
-    showOffline();
-    if (liveLabel) liveLabel.textContent = "Cole o link do POST da live_";
-    if (offlineState) {
-      const h1 = offlineState.querySelector("h1");
-      if (h1) h1.textContent = "Use o link do status/post";
-      const p = offlineState.querySelector("p");
-      if (p) p.textContent = "O X bloqueia iframe de /i/broadcasts/. Va no seu perfil, clique no tweet que anuncia a live e cole esse link no admin.";
-    }
-    return;
-  }
-
-  // Link generico
-  showLive(url);
-  window.setTimeout(() => { if (!liveFrame?.contentWindow) showKickFallback(); }, 3500);
+const bootLive = () => {
+  showKickPlayer();
 };
 
-if (openLink) openLink.href = readLiveUrl() || fallbackXUrl;
+window.addEventListener("load", () => bootLive());
+window.setTimeout(() => bootLive(), 800);
 
-openXButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    window.open(readLiveUrl() || fallbackXUrl, "_blank", "noopener,noreferrer");
-  });
+// Detecta mudancas do admin em outra aba
+window.addEventListener("storage", (e) => {
+  if (e.key === storageKey) bootLive();
+});
+
+// Polling: verifica localStorage a cada 3s pra mesma aba tbm
+window.setInterval(() => {
+  const current = normalizeBroadcastUrl(localStorage.getItem(storageKey) || liveRoot?.dataset.liveSrc || config.liveUrl);
+  if (current !== lastLiveUrl) {
+    lastLiveUrl = current;
+    bootLive();
+  }
+}, 3000);
 });
 
 let lastLiveUrl = readLiveUrl();

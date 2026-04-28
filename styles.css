@@ -257,26 +257,6 @@ svg {
   background: #000;
 }
 
-.x-post-mount {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  overflow: hidden;
-  background: #000;
-}
-
-.x-post-mount[hidden] {
-  display: none;
-}
-
-.x-post-mount iframe {
-  width: 100% !important;
-  min-width: 100% !important;
-  height: 100% !important;
-  min-height: 100% !important;
-  border: 0;
-}
-
 .video-shell.is-live .live-frame {
   z-index: 1;
 }
@@ -291,7 +271,7 @@ svg {
   border-radius: 3px;
   color: var(--text);
   background: rgba(0, 0, 0, 0.62);
-  content: "AO VIVO — X";
+  content: "AO VIVO — Kick";
   font-size: 0.62rem;
   font-weight: 900;
   letter-spacing: 0.12em;

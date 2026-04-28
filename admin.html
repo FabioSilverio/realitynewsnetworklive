@@ -63,12 +63,12 @@
       <p class="sub">Console de controle da transmissao</p>
 
       <form class="form" data-form>
-        <label for="url">URL da live (X ou Kick)</label>
+        <label for="url">URL da live na Kick</label>
         <div class="row">
-          <input id="url" name="url" type="url" inputmode="url" placeholder="x.com/faaretz/status/123... — link do POST que anuncia a live" data-url />
+          <input id="url" name="url" type="url" inputmode="url" placeholder="kick.com/rsnnews — ou deixe em branco para padrao" data-url />
           <button class="btn" type="submit">Atualizar</button>
         </div>
-        <p data-msg>Cole o link do POST (tweet) que anuncia a live. O player vai ocupar o palco inteiro. Nao use /i/broadcasts/.</p>
+        <p data-msg>Deixe em branco para usar kick.com/rsnnews como padrao. O player ocupa o palco inteiro.</p>
         <div class="actions">
           <button class="btn btn-ghost" type="button" data-clear>Limpar salvo</button>
           <button class="btn btn-ghost" type="button" data-copy>Copiar link</button>
@@ -77,7 +77,7 @@
       </form>
 
       <div class="preview">
-        <p>URL salva agora:</p>
+        <p>Canal padrao: kick.com/rsnnews</p>
         <code data-preview>Nenhuma</code>
       </div>
     </div>

@@ -4,17 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>RSN Live</title>
-    <meta
-      name="description"
-      content="RSN Live: transmissao ao vivo no X, tweets de @faaretz e links para acompanhar no YouTube."
-    />
+    <meta name="description" content="RSN Live: transmissao ao vivo na Kick e chat em tempo real." />
     <meta name="theme-color" content="#020403" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -42,21 +36,15 @@
             <p class="handle">@faaretz</p>
           </div>
 
-          <div
-            class="video-shell"
-            data-live
-            data-live-src="https://x.com/i/broadcasts/1mxPaLrzwgbKN"
-            data-live-handle="faaretz"
-          >
+          <div class="video-shell" data-live>
             <iframe
               class="live-frame"
-              title="Transmissao ao vivo RSN no X"
+              title="Transmissao ao vivo RSN na Kick"
               allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
               referrerpolicy="strict-origin-when-cross-origin"
-              loading="lazy"
+              loading="eager"
               hidden
             ></iframe>
-            <div class="x-post-mount" data-live-post aria-label="Post da live no X" hidden></div>
 
             <div class="offline-state" data-offline>
               <div class="offline-state__rings" aria-hidden="true">
@@ -71,7 +59,7 @@
               </button>
               <h1 id="live-title">RSN esta off no momento</h1>
               <p>
-                Replay carregado do X. Se o player for bloqueado pelo navegador, abra direto no X.
+                Player via Kick.com/rsnnews. Se estiver off, abra no X ou YouTube.
               </p>
               <a class="inline-action" data-open-link href="https://x.com/faaretz" target="_blank" rel="noreferrer">
                 Assistir no X
@@ -81,11 +69,11 @@
 
           <footer class="stage__footer">
             <p>RSN live desk: politica, tecnologia, mercados e internet em tempo real</p>
-            <p>X.com / Kick.com</p>
+            <p>Kick.com / X.com</p>
           </footer>
         </section>
 
-        <aside class="side-rail" aria-label="Links e tweets">
+        <aside class="side-rail" aria-label="Links e chat">
           <div class="quick-links" aria-label="Links sociais">
             <a class="quick-link quick-link--x" href="https://x.com/faaretz" target="_blank" rel="noreferrer">
               <span class="quick-link__icon">X</span>
@@ -145,10 +133,8 @@
         </aside>
       </main>
 
-
     </div>
 
-    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.47.10/dist/umd/supabase.min.js"></script>
     <script src="script.js"></script>
   </body>
