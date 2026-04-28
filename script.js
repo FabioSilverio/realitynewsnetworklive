@@ -10,13 +10,11 @@ const SUPABASE_URL = "https://bshealgoawnasmabiyjk.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzaGVhbGdvYXduYXNtYWJpeWprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczOTY2NDcsImV4cCI6MjA5Mjk3MjY0N30.RMU1KcJNrIMJjc3z2GYa7p7gVTLyY90BOH-pVnaOTJQ";
 
 const liveRoot = document.querySelector("[data-live]");
-const liveFrame = document.querySelector(".live-frame");
 const offlineState = document.querySelector("[data-offline]");
 const liveLabel = document.querySelector("[data-live-label]");
 
 const showOffline = () => {
   liveRoot?.classList.remove("is-live");
-  if (liveFrame) { liveFrame.removeAttribute("src"); }
   if (offlineState) offlineState.hidden = false;
   if (liveLabel) liveLabel.textContent = "Transmissao offline_";
 };
@@ -27,23 +25,11 @@ const showKickPlayer = () => {
   if (liveLabel) liveLabel.textContent = "AO VIVO — Kick_";
 };
 
-const startOverlay = document.getElementById("start-overlay");
-
-const startLive = () => {
-  if (!liveFrame) return;
-  liveFrame.removeAttribute("hidden");
-  liveFrame.src = `https://player.kick.com/${config.kickChannel}`;
-  if (startOverlay) startOverlay.classList.add("is-hidden");
-};
-
-startOverlay?.addEventListener("click", startLive);
-
 const bootLive = () => {
   showKickPlayer();
 };
 
 window.addEventListener("DOMContentLoaded", () => bootLive());
-window.setTimeout(() => bootLive(), 500);
 
 // ==================== CHAT ====================
 const CHAT_ADMIN_PASSWORD = "rsnsocial";

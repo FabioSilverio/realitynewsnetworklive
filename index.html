@@ -41,21 +41,11 @@
               class="live-frame"
               id="kick-player"
               title="Transmissao ao vivo RSN na Kick"
+              src="https://player.kick.com/rsnnews"
               allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+              sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-presentation"
               allowfullscreen
-              loading="eager"
             ></iframe>
-
-            <button class="start-overlay" id="start-overlay" type="button" aria-label="Iniciar transmissao com som">
-              <svg class="start-overlay__ring" viewBox="0 0 120 120" aria-hidden="true">
-                <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(57,255,122,0.15)" stroke-width="2"/>
-                <circle cx="60" cy="60" r="38" fill="none" stroke="rgba(57,255,122,0.08)" stroke-width="1.5"/>
-              </svg>
-              <svg class="start-overlay__play" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M8 5.14v13.72L19 12 8 5.14Z" fill="#39ff7a"/>
-              </svg>
-              <span class="start-overlay__text">Iniciar com som</span>
-            </button>
 
             <div class="offline-state" data-offline>
               <div class="offline-state__rings" aria-hidden="true">
