@@ -8,8 +8,8 @@ const config = {
 // 1. Crie um projeto gratuito em https://supabase.com
 // 2. Vá em Project Settings > API e copie URL + anon public key
 // 3. Cole abaixo e rode o conteúdo de setup-supabase.sql no SQL Editor
-const SUPABASE_URL = "https://SEU-PROJETO.supabase.co";
-const SUPABASE_ANON_KEY = "sua-anon-key-aqui";
+const SUPABASE_URL = "https://bshealgoawnasmabiyjk.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzaGVhbGdvYXduYXNtYWJpeWprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczOTY2NDcsImV4cCI6MjA5Mjk3MjY0N30.RMU1KcJNrIMJjc3z2GYa7p7gVTLyY90BOH-pVnaOTJQ";
 
 const params = new URLSearchParams(window.location.search);
 const liveFromUrl = params.get("broadcast");
