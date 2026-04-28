@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RSN Live — Admin</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#020403" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .admin-page { max-width: 720px; margin: 0 auto; padding: 40px 24px; }
+    .admin-page h1 { margin: 0 0 6px; font-size: 1.4rem; text-transform: uppercase; }
+    .admin-page .handle { margin: 0 0 28px; color: var(--dim); font-size: 0.78rem; }
+    .admin-gate__box { max-width: 420px; margin: 10vh auto 0; }
+    .admin-gate__box input { width: 100%; }
+    .admin-panel.is-visible { display: block; }
+    .admin-preview { margin-top: 18px; padding: 16px; border: 1px solid var(--line); border-radius: 6px; background: rgba(255,255,255,0.028); }
+    .admin-preview p { margin: 0 0 8px; color: var(--muted); font-size: 0.72rem; }
+    .admin-preview code { display: block; padding: 10px 12px; border-radius: 4px; background: rgba(0,0,0,0.36); color: var(--green-2); font: 700 0.78rem/1.4 var(--mono); word-break: break-all; }
+  </style>
+</head>
+<body>
+  <div class="scanline" aria-hidden="true"></div>
+  <div class="site-shell admin-page">
+    <header class="topbar" style="grid-template-columns: auto 1fr;">
+      <a class="brand" href="./" aria-label="RSN Live">
+        <img src="assets/img/rsn-logo.svg" alt="RSN" />
+      </a>
+      <a class="nav__link" href="./">← Voltar ao site</a>
+    </header>
+
+    <div class="admin-gate" data-admin-gate>
+      <div class="admin-gate__box">
+        <label for="admin-gate-input">Senha do admin</label>
+        <input id="admin-gate-input" type="password" placeholder="••••••••" data-admin-gate-input />
+        <button type="button" data-admin-gate-unlock>Entrar</button>
+        <p data-admin-gate-hint style="text-align:center;color:var(--dim);font-size:0.68rem;margin:0;">Area restrita.</p>
+      </div>
+    </div>
+
+    <section id="admin" class="admin-panel" aria-labelledby="admin-title" hidden>
+      <h1 id="admin-title">Live source</h1>
+      <p class="handle">Console de controle da transmissao</p>
+
+      <form class="admin-form" data-admin-form>
+        <label for="admin-live-url">URL do post ou broadcast no X</label>
+        <div class="admin-form__row">
+          <input id="admin-live-url" name="liveUrl" type="url" inputmode="url" placeholder="https://x.com/faaretz/status/... ou https://x.com/i/broadcasts/..." data-admin-live-url />
+          <button type="submit">Atualizar palco</button>
+        </div>
+        <p data-admin-status>Cole a URL do post da live para tentar embedar no palco. A URL fica oculta do endereco publico e salva apenas neste navegador.</p>
+        <div class="admin-actions">
+          <button type="button" data-admin-clear>Limpar salvo</button>
+          <button type="button" data-admin-copy>Copiar URL compartilhavel</button>
+          <a data-admin-share href="./" target="_blank" rel="noreferrer">Abrir URL compartilhavel</a>
+        </div>
+      </form>
+
+      <div class="admin-preview">
+        <p>URL atual salva no navegador:</p>
+        <code data-admin-preview-url>Nenhuma</code>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const ADMIN_PASSWORD = "rsn2024";
+    const storageKey = "rsnLiveUrl";
+
+    const adminGate = document.querySelector("[data-admin-gate]");
+    const adminGateInput = document.querySelector("[data-admin-gate-input]");
+    const adminGateUnlock = document.querySelector("[data-admin-gate-unlock]");
+    const adminPanel = document.querySelector("#admin");
+    const adminForm = document.querySelector("[data-admin-form]");
+    const adminLiveUrl = document.querySelector("[data-admin-live-url]");
+    const adminStatus = document.querySelector("[data-admin-status]");
+    const adminClear = document.querySelector("[data-admin-clear]");
+    const adminShare = document.querySelector("[data-admin-share]");
+    const adminCopy = document.querySelector("[data-admin-copy]");
+    const adminPreviewUrl = document.querySelector("[data-admin-preview-url]");
+
+    const normalizeBroadcastUrl = (value) => {
+      if (!value) return "";
+      try {
+        const url = new URL(value, window.location.href);
+        return url.protocol === "https:" ? url.href : "";
+      } catch { return ""; }
+    };
+
+    const saved = localStorage.getItem(storageKey) || "";
+    if (adminLiveUrl) adminLiveUrl.value = saved;
+    if (adminPreviewUrl) adminPreviewUrl.textContent = saved || "Nenhuma";
+
+    const updateShareLink = (url) => {
+      if (!adminShare) return;
+      const shareUrl = new URL(window.location.origin + window.location.pathname.replace(/admin\.html$/, ""));
+      if (url) shareUrl.searchParams.set("broadcast", url);
+      adminShare.href = shareUrl.href;
+    };
+    updateShareLink(saved);
+
+    const setAdminMessage = (msg) => { if (adminStatus) adminStatus.textContent = msg; };
+
+    const unlockAdmin = () => {
+      const value = adminGateInput?.value || "";
+      if (value !== ADMIN_PASSWORD) {
+        if (adminGateInput) adminGateInput.value = "";
+        const hint = document.querySelector("[data-admin-gate-hint]");
+        if (hint) { hint.textContent = "Senha incorreta. Tente novamente."; hint.style.color = "var(--red)"; }
+        return;
+      }
+      if (adminGate) adminGate.hidden = true;
+      if (adminPanel) { adminPanel.hidden = false; adminPanel.classList.add("is-visible"); }
+    };
+
+    adminGateUnlock?.addEventListener("click", unlockAdmin);
+    adminGateInput?.addEventListener("keydown", (e) => { if (e.key === "Enter") unlockAdmin(); });
+
+    adminForm?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const nextUrl = normalizeBroadcastUrl(adminLiveUrl?.value || "");
+      if (!nextUrl) { setAdminMessage("Cole uma URL valida do X."); return; }
+      localStorage.setItem(storageKey, nextUrl);
+      updateShareLink(nextUrl);
+      if (adminPreviewUrl) adminPreviewUrl.textContent = nextUrl;
+      setAdminMessage("Fonte salva. A URL publica permanece limpa.");
+    });
+
+    adminClear?.addEventListener("click", () => {
+      localStorage.removeItem(storageKey);
+      updateShareLink("");
+      if (adminLiveUrl) adminLiveUrl.value = "";
+      if (adminPreviewUrl) adminPreviewUrl.textContent = "Nenhuma";
+      setAdminMessage("Fonte local limpa.");
+    });
+
+    adminCopy?.addEventListener("click", async () => {
+      const url = adminShare?.href;
+      if (!url) return;
+      try { await navigator.clipboard.writeText(url); setAdminMessage("URL copiada."); }
+      catch { setAdminMessage("Nao foi possivel copiar."); }
+    });
+  </script>
+</body>
+</html>
