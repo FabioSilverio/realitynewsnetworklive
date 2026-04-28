@@ -30,8 +30,8 @@ const normalizeBroadcastUrl = (value) => {
   } catch { return ""; }
 };
 
-const savedLiveUrl = localStorage.getItem(storageKey) || "";
-const broadcastUrl = normalizeBroadcastUrl(savedLiveUrl || liveRoot?.dataset.liveSrc || config.liveUrl);
+const readLiveUrl = () => normalizeBroadcastUrl(localStorage.getItem(storageKey) || liveRoot?.dataset.liveSrc || config.liveUrl);
+const broadcastUrl = readLiveUrl();
 const fallbackXUrl = `https://x.com/${config.xHandle}`;
 const isRawBroadcastUrl = (url) => url.includes("/i/broadcasts/");
 
@@ -79,13 +79,16 @@ const showLive = (url) => {
   if (liveLabel) liveLabel.textContent = "Transmissao conectada_";
 };
 
-if (openLink) openLink.href = broadcastUrl || fallbackXUrl;
-openXButtons.forEach((btn) => {
-  btn.addEventListener("click", () => window.open(broadcastUrl || fallbackXUrl, "_blank", "noopener,noreferrer"));
+if (openLink) openLink.href = readLiveUrl() || fallbackXUrl;
+
+openXButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    window.open(readLiveUrl() || fallbackXUrl, "_blank", "noopener,noreferrer");
+  });
 });
 
 const bootLive = (targetUrl) => {
-  const url = normalizeBroadcastUrl(targetUrl || savedLiveUrl || liveRoot?.dataset.liveSrc || config.liveUrl);
+  const url = normalizeBroadcastUrl(targetUrl || readLiveUrl());
   if (!url) { showOffline(); return; }
   if (openLink) openLink.href = url || fallbackXUrl;
   openXButtons.forEach((btn) => { btn.onclick = () => window.open(url || fallbackXUrl, "_blank", "noopener,noreferrer"); });
@@ -101,6 +104,13 @@ if (window.twttr?.ready) {
   window.addEventListener("load", () => bootLive());
   window.setTimeout(() => bootLive(), 1600);
 }
+
+// Detecta mudanças feitas pelo admin em outra aba (admin.html)
+window.addEventListener("storage", (e) => {
+  if (e.key === storageKey) {
+    bootLive();
+  }
+});
 
 window.addEventListener("message", (event) => {
   if (event.origin.includes("x.com") || event.origin.includes("twitter.com")) {
