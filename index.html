@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RSN Live</title>
+    <meta
+      name="description"
+      content="RSN Live: transmissao ao vivo no X, tweets de @faaretz e links para acompanhar no YouTube."
+    />
+    <meta name="theme-color" content="#020403" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="scanline" aria-hidden="true"></div>
+    <div class="site-shell">
+      <header class="topbar">
+        <a class="brand" href="#top" aria-label="RSN Live">
+          <img src="assets/img/rsn-logo.svg" alt="RSN" />
+        </a>
+
+        <nav class="nav" aria-label="Navegacao principal">
+          <a class="nav__link nav__link--active" href="#top">Live</a>
+          <a class="nav__link" href="#replays">Past episodes</a>
+          <a class="nav__link" href="#admin">Admin</a>
+        </nav>
+
+        <div class="on-air" aria-label="Status da transmissao">
+          <span aria-hidden="true"></span>
+          On air
+        </div>
+      </header>
+
+      <main id="top" class="live-layout">
+        <section class="stage" aria-labelledby="live-title">
+          <div class="stage__header">
+            <p class="terminal-label" data-live-label>Connecting to broadcast_</p>
+            <p class="handle">@faaretz</p>
+          </div>
+
+          <div
+            class="video-shell"
+            data-live
+            data-live-src="https://x.com/i/broadcasts/1mxPaLrzwgbKN"
+            data-live-handle="faaretz"
+          >
+            <iframe
+              class="live-frame"
+              title="Transmissao ao vivo RSN no X"
+              allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+              referrerpolicy="strict-origin-when-cross-origin"
+              loading="lazy"
+              hidden
+            ></iframe>
+            <div class="x-post-mount" data-live-post aria-label="Post da live no X" hidden></div>
+
+            <div class="offline-state" data-offline>
+              <div class="offline-state__rings" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <button class="play-button" type="button" data-open-x aria-label="Abrir live no X">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M9 7.2v9.6L17 12 9 7.2Z" fill="currentColor" />
+                </svg>
+              </button>
+              <h1 id="live-title">RSN esta off no momento</h1>
+              <p>
+                Replay carregado do X. Se o player for bloqueado pelo navegador, abra direto no X.
+              </p>
+              <a class="inline-action" data-open-link href="https://x.com/faaretz" target="_blank" rel="noreferrer">
+                Watch on X
+              </a>
+            </div>
+          </div>
+
+          <footer class="stage__footer">
+            <p>RSN live desk: politica, tecnologia, mercados e internet em tempo real</p>
+            <p>X.com / broadcasts</p>
+          </footer>
+        </section>
+
+        <aside class="side-rail" aria-label="Links e tweets">
+          <div class="quick-links" aria-label="Links sociais">
+            <a class="quick-link quick-link--x" href="https://x.com/faaretz" target="_blank" rel="noreferrer">
+              <span class="quick-link__icon">X</span>
+              <span>
+                <strong>Follow on X</strong>
+                <small>@faaretz</small>
+              </span>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+            </a>
+
+            <a class="quick-link quick-link--youtube" href="https://www.youtube.com/@faaretz" target="_blank" rel="noreferrer">
+              <span class="quick-link__icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M21.6 7.2s-.2-1.5-.9-2.2c-.9-.9-1.9-.9-2.3-1C15.2 3.8 12 3.8 12 3.8h-.1s-3.2 0-6.4.2c-.5.1-1.5.1-2.3 1-.7.7-.9 2.2-.9 2.2S2 9 2 10.8v1.7c0 1.8.2 3.6.2 3.6s.2 1.5.9 2.2c.9.9 2.1.9 2.6 1 1.9.2 6.3.2 6.3.2s3.2 0 6.4-.2c.5-.1 1.5-.1 2.3-1 .7-.7.9-2.2.9-2.2s.2-1.8.2-3.6v-1.7c0-1.8-.2-3.6-.2-3.6ZM10 14.7V8.5l5.4 3.1-5.4 3.1Z" fill="currentColor" />
+                </svg>
+              </span>
+              <span>
+                <strong>Watch on YouTube</strong>
+                <small>streams, cortes e especiais</small>
+              </span>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+            </a>
+          </div>
+
+          <a class="youtube-banner" href="https://www.youtube.com/@faaretz?sub_confirmation=1" target="_blank" rel="noreferrer">
+            <span class="youtube-banner__label">RSN on YouTube</span>
+            <strong>Siga o canal e receba os cortes da transmissao.</strong>
+            <span class="youtube-banner__button">Subscribe</span>
+          </a>
+
+          <section class="tweets-panel" aria-labelledby="tweets-title">
+            <div class="tweets-panel__top">
+              <h2 id="tweets-title">X @faaretz</h2>
+              <a href="https://x.com/faaretz" target="_blank" rel="noreferrer">Follow</a>
+            </div>
+            <div class="tweets-panel__embed">
+              <div class="x-timeline-mount" data-x-timeline aria-label="Feed de @faaretz no X">
+              <a class="twitter-timeline"
+                 data-height="720"
+                 data-theme="dark"
+                 data-chrome="noheader nofooter noborders transparent"
+                 href="https://twitter.com/faaretz?ref_src=twsrc%5Etfw">
+                Tweets by faaretz
+              </a>
+            </div>
+              <div class="feed-fallback" data-feed-fallback>
+                <a class="feed-card" href="https://x.com/faaretz" target="_blank" rel="noreferrer">
+                  <span class="feed-card__meta">X feed · @faaretz</span>
+                  <strong>O X nao liberou posts para este embed.</strong>
+                  <small>Isso acontece quando o perfil/broadcast exige login, bloqueia embeds ou o widget oficial carrega vazio.</small>
+                </a>
+                <a class="feed-card feed-card--compact" href="https://x.com/faaretz/with_replies" target="_blank" rel="noreferrer">
+                  <span class="feed-card__meta">Replies</span>
+                  <strong>Ver posts e respostas</strong>
+                </a>
+                <a class="feed-card feed-card--compact" href="https://x.com/faaretz/media" target="_blank" rel="noreferrer">
+                  <span class="feed-card__meta">Media</span>
+                  <strong>Ver imagens e videos</strong>
+                </a>
+              </div>
+            </div>
+          </section>
+        </aside>
+      </main>
+
+      <section id="replays" class="replays" aria-labelledby="replays-title">
+        <div>
+          <p class="section-kicker">Archive</p>
+          <h2 id="replays-title">Past episodes</h2>
+        </div>
+        <div class="episode-row">
+          <article>
+            <span>Tue . Apr 28</span>
+            <strong>Live room standby</strong>
+          </article>
+          <article>
+            <span>Mon . Apr 27</span>
+            <strong>Market pulse</strong>
+          </article>
+          <article>
+            <span>Fri . Apr 24</span>
+            <strong>Internet week recap</strong>
+          </article>
+        </div>
+      </section>
+
+      <section id="admin" class="admin-panel" aria-labelledby="admin-title">
+        <div>
+          <p class="section-kicker">Admin</p>
+          <h2 id="admin-title">Live source</h2>
+        </div>
+        <form class="admin-form" data-admin-form>
+          <label for="admin-live-url">URL do post ou broadcast no X</label>
+          <div class="admin-form__row">
+            <input
+              id="admin-live-url"
+              name="liveUrl"
+              type="url"
+              inputmode="url"
+              placeholder="https://x.com/faaretz/status/... ou https://x.com/i/broadcasts/..."
+              data-admin-live-url
+            />
+            <button type="submit">Atualizar palco</button>
+          </div>
+          <p data-admin-status>
+            Cole a URL do post da live para tentar embedar no palco. A URL fica oculta do endereco publico e salva apenas neste navegador.
+          </p>
+          <div class="admin-actions">
+            <button type="button" data-admin-clear>Limpar salvo</button>
+            <button type="button" data-admin-copy>Copiar URL compartilhavel</button>
+            <a data-admin-share href="https://rsn-live.vercel.app" target="_blank" rel="noreferrer">Abrir URL compartilhavel</a>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
