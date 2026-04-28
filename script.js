@@ -126,15 +126,23 @@ const chatCount = document.querySelector("[data-chat-count]");
 let supabase = null;
 let isAdmin = localStorage.getItem(CHAT_ADMIN_KEY) === "1";
 let username = localStorage.getItem(CHAT_USERNAME_KEY) || "";
+let editingUsername = false;
 
 const setJoinedState = () => {
   if (!chatUsername || !chatJoinBtn) return;
-  if (username) {
+  if (username && !editingUsername) {
     chatUsername.value = username;
     chatUsername.readOnly = true;
     chatUsername.style.opacity = "0.7";
     chatJoinBtn.textContent = username;
     chatJoinBtn.classList.add("is-joined");
+  } else if (editingUsername) {
+    chatUsername.readOnly = false;
+    chatUsername.style.opacity = "1";
+    chatJoinBtn.textContent = "Salvar";
+    chatJoinBtn.classList.remove("is-joined");
+    chatUsername.focus();
+    chatUsername.setSelectionRange(chatUsername.value.length, chatUsername.value.length);
   } else {
     chatUsername.value = "";
     chatUsername.readOnly = false;
@@ -146,34 +154,33 @@ const setJoinedState = () => {
 
 setJoinedState();
 
-chatJoinBtn?.addEventListener("click", () => {
+const saveUsername = () => {
   const raw = chatUsername?.value.trim() || "";
   if (!raw) return;
-
-  if (username) {
-    // Logout: trocar de nome
-    if (confirm("Trocar de apelido? Seus dados locais serao limpos.")) {
-      username = "";
-      localStorage.removeItem(CHAT_USERNAME_KEY);
-      isAdmin = false;
-      localStorage.removeItem(CHAT_ADMIN_KEY);
-      if (chatAdminToggle) chatAdminToggle.classList.remove("is-active");
-      setJoinedState();
-    }
-    return;
-  }
-
-  // Login
   username = raw.slice(0, 20);
   localStorage.setItem(CHAT_USERNAME_KEY, username);
+  editingUsername = false;
   setJoinedState();
+};
+
+chatJoinBtn?.addEventListener("click", () => {
+  if (username && !editingUsername) {
+    // Inicia edição
+    editingUsername = true;
+    setJoinedState();
+    return;
+  }
+  saveUsername();
 });
 
-chatUsername?.addEventListener("click", () => {
-  if (username && chatUsername.readOnly) {
-    if (confirm("Deseja trocar de apelido?")) {
-      chatJoinBtn?.click();
-    }
+chatUsername?.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    saveUsername();
+  }
+  if (e.key === "Escape" && editingUsername) {
+    editingUsername = false;
+    setJoinedState();
   }
 });
 
