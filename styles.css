@@ -279,9 +279,7 @@ svg {
 }
 
 .video-shell.is-live .offline-state {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s;
+  display: none !important;
 }
 
 .offline-state {

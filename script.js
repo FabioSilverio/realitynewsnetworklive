@@ -40,20 +40,25 @@ const showKickPlayer = () => {
   if (liveFrame) {
     liveFrame.src = kickPlayer;
     liveFrame.hidden = false;
+    liveFrame.removeAttribute("hidden");
   }
   if (offlineState) offlineState.hidden = true;
   liveRoot?.classList.add("is-live");
   if (liveLabel) liveLabel.textContent = "AO VIVO — Kick_";
 };
 
-let lastLiveUrl = readLiveUrl();
-
 const bootLive = () => {
   showKickPlayer();
+  // Se o Kick nao carregar em 4s, mostra offline com link
+  window.setTimeout(() => {
+    if (liveFrame && (!liveFrame.contentWindow || liveFrame.contentWindow.document?.body?.childElementCount === 0)) {
+      if (liveLabel) liveLabel.textContent = "Kick offline — abra no app_";
+    }
+  }, 4000);
 };
 
-window.addEventListener("load", () => bootLive());
-window.setTimeout(() => bootLive(), 800);
+window.addEventListener("DOMContentLoaded", () => bootLive());
+window.setTimeout(() => bootLive(), 500);
 
 // Detecta mudancas do admin em outra aba
 window.addEventListener("storage", (e) => {
