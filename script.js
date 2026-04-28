@@ -96,25 +96,34 @@ const bootLive = (targetUrl) => {
   if (openLink) openLink.href = url || fallbackXUrl;
   openXButtons.forEach((btn) => { btn.onclick = () => window.open(url || fallbackXUrl, "_blank", "noopener,noreferrer"); });
 
-  // Post do X (status) - tenta embedar tweet
-  if (getPostId(url) && showPostEmbed(url)) return;
-
-  // Link de broadcast (/i/broadcasts/) - X bloqueia iframe, abre direto
-  if (isRawBroadcastUrl(url)) {
-    showOffline();
-    if (liveLabel) liveLabel.textContent = "Transmissao ao vivo no X_";
-    if (offlineState) {
-      const h1 = offlineState.querySelector("h1");
-      if (h1) h1.textContent = "RSN esta AO VIVO";
-      const p = offlineState.querySelector("p");
-      if (p) p.textContent = "O X bloqueia embed de broadcast. Clique no botao abaixo para assistir.";
+  // Post do X (status) - tenta embedar o tweet que contem a live
+  if (getPostId(url)) {
+    if (!showPostEmbed(url)) {
+      // Widget nao disponivel ainda, tenta de novo em 2s
+      window.setTimeout(() => showPostEmbed(url) || bootFallback(url), 2000);
     }
     return;
   }
 
-  // Outro link https - tenta iframe direto
+  // Link de broadcast - X bloqueia iframe, instrui usuario
+  if (isRawBroadcastUrl(url)) {
+    bootFallback(url);
+    if (liveLabel) liveLabel.textContent = "Use o link do status!_";
+    return;
+  }
+
   showLive(url);
   window.setTimeout(() => { if (!liveFrame?.contentWindow) showOffline(); }, 3500);
+};
+
+const bootFallback = (url) => {
+  showOffline();
+  if (offlineState) {
+    const h1 = offlineState.querySelector("h1");
+    if (h1) h1.textContent = "RSN esta AO VIVO";
+    const p = offlineState.querySelector("p");
+    if (p) p.textContent = "Link /i/broadcasts/ nao permite embed. Cole no admin o link do POST/status da live no lugar.";
+  }
 };
 
 if (window.twttr?.ready) {
