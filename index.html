@@ -28,7 +28,6 @@
         <nav class="nav" aria-label="Navegacao principal">
           <a class="nav__link nav__link--active" href="#top">Live</a>
           <a class="nav__link" href="#replays">Past episodes</a>
-          <a class="nav__link" href="#admin">Admin</a>
         </nav>
 
         <div class="on-air" aria-label="Status da transmissao">
@@ -130,11 +129,13 @@
             <div class="tweets-panel__embed">
               <div class="x-timeline-mount" data-x-timeline aria-label="Feed de @faaretz no X">
               <a class="twitter-timeline"
+                 data-width="360"
                  data-height="720"
                  data-theme="dark"
-                 data-chrome="noheader nofooter noborders transparent"
-                 href="https://twitter.com/faaretz?ref_src=twsrc%5Etfw">
-                Tweets by faaretz
+                 data-dnt="true"
+                 data-chrome="noheader nofooter noborders transparent noscrollbar"
+                 href="https://x.com/faaretz?ref_src=twsrc%5Etfw">
+                Tweets by @faaretz
               </a>
             </div>
               <div class="feed-fallback" data-feed-fallback>
@@ -178,7 +179,7 @@
         </div>
       </section>
 
-      <section id="admin" class="admin-panel" aria-labelledby="admin-title">
+      <section id="admin" class="admin-panel" aria-labelledby="admin-title" hidden>
         <div>
           <p class="section-kicker">Admin</p>
           <h2 id="admin-title">Live source</h2>
@@ -206,6 +207,15 @@
           </div>
         </form>
       </section>
+
+      <div class="admin-gate" data-admin-gate hidden>
+        <div class="admin-gate__box">
+          <label for="admin-gate-input">Senha do admin</label>
+          <input id="admin-gate-input" type="password" placeholder="••••••••" data-admin-gate-input />
+          <button type="button" data-admin-gate-unlock>Entrar</button>
+          <p data-admin-gate-hint>Pressione <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>A</kbd> para abrir.</p>
+        </div>
+      </div>
     </div>
 
     <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
