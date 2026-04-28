@@ -63,12 +63,12 @@
       <p class="sub">Console de controle da transmissao</p>
 
       <form class="form" data-form>
-        <label for="url">URL do post ou broadcast no X</label>
+        <label for="url">URL da live (X ou Kick)</label>
         <div class="row">
-          <input id="url" name="url" type="url" inputmode="url" placeholder="https://x.com/faaretz/status/123456 — cole o link do POST da live, nao o /i/broadcasts/" data-url />
+          <input id="url" name="url" type="url" inputmode="url" placeholder="URL da live do X (broadcast ou status) ou do Kick.com" data-url />
           <button class="btn" type="submit">Atualizar</button>
         </div>
-        <p data-msg>Cole o link do POST (status) da live — nao use /i/broadcasts/. Ex: x.com/faaretz/status/12345</p>
+        <p data-msg>Cole o link da live (X broadcast/status ou Kick.com). Fallback: se X falhar, carrega Kick automaticamente.</p>
         <div class="actions">
           <button class="btn btn-ghost" type="button" data-clear>Limpar salvo</button>
           <button class="btn btn-ghost" type="button" data-copy>Copiar link</button>

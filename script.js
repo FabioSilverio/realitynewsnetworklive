@@ -1,7 +1,8 @@
 const config = {
   xHandle: "faaretz",
   youtubeUrl: "https://www.youtube.com/@faaretz",
-  liveUrl: ""
+  liveUrl: "",
+  kickChannel: "faaretz"
 };
 
 // === SUPABASE CONFIG ===
@@ -34,6 +35,11 @@ const readLiveUrl = () => normalizeBroadcastUrl(localStorage.getItem(storageKey)
 const broadcastUrl = readLiveUrl();
 const fallbackXUrl = `https://x.com/${config.xHandle}`;
 const isRawBroadcastUrl = (url) => url.includes("/i/broadcasts/");
+const isKickUrl = (url) => url.includes("kick.com");
+const getBroadcastId = (url) => {
+  const m = url.match(/\/i\/broadcasts\/(\w+)/);
+  return m ? m[1] : "";
+};
 
 const getPostId = (url) => {
   const match = url.match(/\/status(?:es)?\/(\d+)/);
@@ -77,6 +83,52 @@ const showLive = (url) => {
   offlineState.hidden = false;
   liveRoot.classList.add("is-live");
   if (liveLabel) liveLabel.textContent = "Transmissao conectada_";
+};
+
+const showKickFallback = () => {
+  const kickPlayer = `https://player.kick.com/${config.kickChannel}`;
+  showLive(kickPlayer);
+};
+
+let lastLiveUrl = readLiveUrl();
+
+const bootLive = (targetUrl) => {
+  const url = normalizeBroadcastUrl(targetUrl || readLiveUrl());
+  if (!url) { showOffline(); return; }
+
+  if (openLink) openLink.href = url || fallbackXUrl;
+  openXButtons.forEach((btn) => { btn.onclick = () => window.open(url || fallbackXUrl, "_blank", "noopener,noreferrer"); });
+
+  // Kick.com — iframe direto
+  if (isKickUrl(url)) {
+    showLive(url);
+    return;
+  }
+
+  // X broadcast (/i/broadcasts/) → converter pra player pscp.tv que aceita iframe
+  const broadcastId = getBroadcastId(url);
+  if (broadcastId) {
+    showLive(`https://www.pscp.tv/w/${broadcastId}`);
+    window.setTimeout(() => {
+      if (!liveFrame?.contentWindow) {
+        // Player do X falhou, tenta Kick como fallback
+        if (liveLabel) liveLabel.textContent = "X bloqueou, tentando Kick..._";
+        showKickFallback();
+      }
+    }, 3500);
+    return;
+  }
+
+  // Status do X — embed tweet com player
+  if (getPostId(url)) {
+    if (showPostEmbed(url)) return;
+    window.setTimeout(() => showPostEmbed(url) || showKickFallback(), 2500);
+    return;
+  }
+
+  // Link generico
+  showLive(url);
+  window.setTimeout(() => { if (!liveFrame?.contentWindow) showKickFallback(); }, 3500);
 };
 
 if (openLink) openLink.href = readLiveUrl() || fallbackXUrl;
