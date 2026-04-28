@@ -87,15 +87,34 @@ openXButtons.forEach((button) => {
   });
 });
 
+let lastLiveUrl = readLiveUrl();
+
 const bootLive = (targetUrl) => {
   const url = normalizeBroadcastUrl(targetUrl || readLiveUrl());
   if (!url) { showOffline(); return; }
+
   if (openLink) openLink.href = url || fallbackXUrl;
   openXButtons.forEach((btn) => { btn.onclick = () => window.open(url || fallbackXUrl, "_blank", "noopener,noreferrer"); });
+
+  // Post do X (status) - tenta embedar tweet
   if (getPostId(url) && showPostEmbed(url)) return;
-  if (isRawBroadcastUrl(url)) { showOffline(); return; }
+
+  // Link de broadcast (/i/broadcasts/) - X bloqueia iframe, abre direto
+  if (isRawBroadcastUrl(url)) {
+    showOffline();
+    if (liveLabel) liveLabel.textContent = "Transmissao ao vivo no X_";
+    if (offlineState) {
+      const h1 = offlineState.querySelector("h1");
+      if (h1) h1.textContent = "RSN esta AO VIVO";
+      const p = offlineState.querySelector("p");
+      if (p) p.textContent = "O X bloqueia embed de broadcast. Clique no botao abaixo para assistir.";
+    }
+    return;
+  }
+
+  // Outro link https - tenta iframe direto
   showLive(url);
-  window.setTimeout(() => { if (!liveFrame?.contentWindow) showOffline(); }, 2800);
+  window.setTimeout(() => { if (!liveFrame?.contentWindow) showOffline(); }, 3500);
 };
 
 if (window.twttr?.ready) {
@@ -105,12 +124,19 @@ if (window.twttr?.ready) {
   window.setTimeout(() => bootLive(), 1600);
 }
 
-// Detecta mudanças feitas pelo admin em outra aba (admin.html)
+// Detecta mudancas do admin em outra aba
 window.addEventListener("storage", (e) => {
-  if (e.key === storageKey) {
+  if (e.key === storageKey) bootLive();
+});
+
+// Polling: verifica localStorage a cada 3s pra mesma aba tbm
+window.setInterval(() => {
+  const current = normalizeBroadcastUrl(localStorage.getItem(storageKey) || liveRoot?.dataset.liveSrc || config.liveUrl);
+  if (current !== lastLiveUrl) {
+    lastLiveUrl = current;
     bootLive();
   }
-});
+}, 3000);
 
 window.addEventListener("message", (event) => {
   if (event.origin.includes("x.com") || event.origin.includes("twitter.com")) {
