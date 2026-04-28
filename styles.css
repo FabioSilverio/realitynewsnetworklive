@@ -261,11 +261,8 @@ svg {
   position: absolute;
   inset: 0;
   z-index: 1;
-  display: grid;
-  place-items: center;
-  padding: 28px;
-  overflow: auto;
-  background: rgba(0, 0, 0, 0.82);
+  overflow: hidden;
+  background: #000;
 }
 
 .x-post-mount[hidden] {
@@ -273,7 +270,11 @@ svg {
 }
 
 .x-post-mount iframe {
-  max-width: min(640px, 100%) !important;
+  width: 100% !important;
+  min-width: 100% !important;
+  height: 100% !important;
+  min-height: 100% !important;
+  border: 0;
 }
 
 .video-shell.is-live .live-frame {
@@ -290,7 +291,7 @@ svg {
   border-radius: 3px;
   color: var(--text);
   background: rgba(0, 0, 0, 0.62);
-  content: "X — transmissao embedada";
+  content: "AO VIVO — X";
   font-size: 0.62rem;
   font-weight: 900;
   letter-spacing: 0.12em;
@@ -300,6 +301,7 @@ svg {
 .video-shell.is-live .offline-state {
   opacity: 0;
   pointer-events: none;
+  transition: opacity 0.3s;
 }
 
 .offline-state {

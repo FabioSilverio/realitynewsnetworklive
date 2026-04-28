@@ -67,11 +67,27 @@ const showPostEmbed = (url) => {
   livePostMount.hidden = false;
   livePostMount.replaceChildren();
   liveRoot.classList.add("is-live");
-  if (offlineState) offlineState.hidden = false;
-  if (liveLabel) liveLabel.textContent = "Transmissao embedada_";
+  if (offlineState) offlineState.hidden = true;
+  if (liveLabel) liveLabel.textContent = "AO VIVO_";
+
   window.twttr.widgets.createTweet(postId, livePostMount, {
-    align: "center", conversation: "none", dnt: true, theme: "dark"
+    align: "center", conversation: "none", dnt: true, theme: "dark", cards: "hidden"
+  }).then(() => {
+    // Tenta autoplay: clica no iframe depois de carregar
+    const iframe = livePostMount.querySelector("iframe");
+    if (iframe) {
+      iframe.style.width = "100%";
+      iframe.style.height = "100%";
+      iframe.allow = "autoplay; fullscreen; encrypted-media; picture-in-picture";
+      // Tenta forçar play via postMessage
+      window.setTimeout(() => {
+        try {
+          iframe.contentWindow?.postMessage({ type: "player:play" }, "*");
+        } catch {}
+      }, 2000);
+    }
   }).catch(() => showOffline());
+
   return true;
 };
 
@@ -144,23 +160,24 @@ const bootLive = (targetUrl) => {
     return;
   }
 
-  // Status do X — embed tweet (que contem o player)
+  // Status do X — embed tweet com player da live ocupando o palco
   if (getPostId(url)) {
     if (showPostEmbed(url)) return;
     window.setTimeout(() => showPostEmbed(url) || showAoVivo(url), 2500);
     return;
   }
 
-  // Broadcast do X — tenta iframe (as vezes funciona), fallback pro Kick
+  // Broadcast do X (/i/broadcasts/) — instrui usar o link do post/status em vez disso
   const broadcastId = getBroadcastId(url);
   if (broadcastId) {
-    // Tenta carregar no iframe (funciona em alguns navegadores com cookies do X)
-    showLive(url);
-    window.setTimeout(() => {
-      if (!liveFrame?.contentWindow || liveFrame.contentWindow.document?.body?.innerHTML === "") {
-        showAoVivo(url);
-      }
-    }, 3000);
+    showOffline();
+    if (liveLabel) liveLabel.textContent = "Cole o link do POST da live_";
+    if (offlineState) {
+      const h1 = offlineState.querySelector("h1");
+      if (h1) h1.textContent = "Use o link do status/post";
+      const p = offlineState.querySelector("p");
+      if (p) p.textContent = "O X bloqueia iframe de /i/broadcasts/. Va no seu perfil, clique no tweet que anuncia a live e cole esse link no admin.";
+    }
     return;
   }
 
