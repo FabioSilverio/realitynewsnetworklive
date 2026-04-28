@@ -12,25 +12,11 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const liveRoot = document.querySelector("[data-live]");
 const liveFrame = document.querySelector(".live-frame");
 const offlineState = document.querySelector("[data-offline]");
-const openXButtons = document.querySelectorAll("[data-open-x]");
-const openLink = document.querySelector("[data-open-link]");
 const liveLabel = document.querySelector("[data-live-label]");
-const storageKey = "rsnLiveUrl";
-
-const normalizeBroadcastUrl = (value) => {
-  if (!value) return "";
-  try {
-    const url = new URL(value, window.location.href);
-    return url.protocol === "https:" ? url.href : "";
-  } catch { return ""; }
-};
-
-const readLiveUrl = () => normalizeBroadcastUrl(localStorage.getItem(storageKey) || liveRoot?.dataset.liveSrc || config.liveUrl);
-const fallbackXUrl = `https://x.com/${config.xHandle}`;
 
 const showOffline = () => {
   liveRoot?.classList.remove("is-live");
-  if (liveFrame) { liveFrame.hidden = true; liveFrame.removeAttribute("src"); }
+  if (liveFrame) { liveFrame.removeAttribute("src"); }
   if (offlineState) offlineState.hidden = false;
   if (liveLabel) liveLabel.textContent = "Transmissao offline_";
 };
@@ -38,9 +24,8 @@ const showOffline = () => {
 const showKickPlayer = () => {
   const kickPlayer = `https://player.kick.com/${config.kickChannel}`;
   if (liveFrame) {
-    liveFrame.src = kickPlayer;
-    liveFrame.hidden = false;
     liveFrame.removeAttribute("hidden");
+    liveFrame.src = kickPlayer;
   }
   if (offlineState) offlineState.hidden = true;
   liveRoot?.classList.add("is-live");
@@ -49,97 +34,10 @@ const showKickPlayer = () => {
 
 const bootLive = () => {
   showKickPlayer();
-  // Se o Kick nao carregar em 4s, mostra offline com link
-  window.setTimeout(() => {
-    if (liveFrame && (!liveFrame.contentWindow || liveFrame.contentWindow.document?.body?.childElementCount === 0)) {
-      if (liveLabel) liveLabel.textContent = "Kick offline — abra no app_";
-    }
-  }, 4000);
 };
 
 window.addEventListener("DOMContentLoaded", () => bootLive());
 window.setTimeout(() => bootLive(), 500);
-
-// Detecta mudancas do admin em outra aba
-window.addEventListener("storage", (e) => {
-  if (e.key === storageKey) bootLive();
-});
-
-// Polling: verifica localStorage a cada 3s pra mesma aba tbm
-window.setInterval(() => {
-  const current = normalizeBroadcastUrl(localStorage.getItem(storageKey) || liveRoot?.dataset.liveSrc || config.liveUrl);
-  if (current !== lastLiveUrl) {
-    lastLiveUrl = current;
-    bootLive();
-  }
-}, 3000);
-});
-
-let lastLiveUrl = readLiveUrl();
-
-const bootLive = (targetUrl) => {
-  const url = normalizeBroadcastUrl(targetUrl || readLiveUrl());
-  if (!url) { showOffline(); return; }
-
-  if (openLink) openLink.href = url || fallbackXUrl;
-  openXButtons.forEach((btn) => { btn.onclick = () => window.open(url || fallbackXUrl, "_blank", "noopener,noreferrer"); });
-
-  // Post do X (status) - tenta embedar o tweet que contem a live
-  if (getPostId(url)) {
-    if (!showPostEmbed(url)) {
-      // Widget nao disponivel ainda, tenta de novo em 2s
-      window.setTimeout(() => showPostEmbed(url) || bootFallback(url), 2000);
-    }
-    return;
-  }
-
-  // Link de broadcast - X bloqueia iframe, instrui usuario
-  if (isRawBroadcastUrl(url)) {
-    bootFallback(url);
-    if (liveLabel) liveLabel.textContent = "Use o link do status!_";
-    return;
-  }
-
-  showLive(url);
-  window.setTimeout(() => { if (!liveFrame?.contentWindow) showOffline(); }, 3500);
-};
-
-const bootFallback = (url) => {
-  showOffline();
-  if (offlineState) {
-    const h1 = offlineState.querySelector("h1");
-    if (h1) h1.textContent = "RSN esta AO VIVO";
-    const p = offlineState.querySelector("p");
-    if (p) p.textContent = "Link /i/broadcasts/ nao permite embed. Cole no admin o link do POST/status da live no lugar.";
-  }
-};
-
-if (window.twttr?.ready) {
-  window.twttr.ready(() => bootLive());
-} else {
-  window.addEventListener("load", () => bootLive());
-  window.setTimeout(() => bootLive(), 1600);
-}
-
-// Detecta mudancas do admin em outra aba
-window.addEventListener("storage", (e) => {
-  if (e.key === storageKey) bootLive();
-});
-
-// Polling: verifica localStorage a cada 3s pra mesma aba tbm
-window.setInterval(() => {
-  const current = normalizeBroadcastUrl(localStorage.getItem(storageKey) || liveRoot?.dataset.liveSrc || config.liveUrl);
-  if (current !== lastLiveUrl) {
-    lastLiveUrl = current;
-    bootLive();
-  }
-}, 3000);
-
-window.addEventListener("message", (event) => {
-  if (event.origin.includes("x.com") || event.origin.includes("twitter.com")) {
-    liveRoot?.classList.add("has-x-message");
-  }
-});
 
 // ==================== CHAT ====================
 const CHAT_ADMIN_PASSWORD = "rsnsocial";
