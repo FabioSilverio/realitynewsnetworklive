@@ -46,13 +46,15 @@
               loading="eager"
             ></iframe>
 
-            <button class="unmute-btn" id="unmute-btn" type="button" aria-label="Ativar som">
-              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M11 5 6 9H2v6h4l5 4V5Z"/>
-                <line x1="23" y1="9" x2="17" y2="15"/>
-                <line x1="17" y1="9" x2="23" y2="15"/>
+            <button class="start-overlay" id="start-overlay" type="button" aria-label="Iniciar transmissao com som">
+              <svg class="start-overlay__ring" viewBox="0 0 120 120" aria-hidden="true">
+                <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(57,255,122,0.15)" stroke-width="2"/>
+                <circle cx="60" cy="60" r="38" fill="none" stroke="rgba(57,255,122,0.08)" stroke-width="1.5"/>
               </svg>
-              <span>Ativar som</span>
+              <svg class="start-overlay__play" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M8 5.14v13.72L19 12 8 5.14Z" fill="#39ff7a"/>
+              </svg>
+              <span class="start-overlay__text">Iniciar com som</span>
             </button>
 
             <div class="offline-state" data-offline>

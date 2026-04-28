@@ -22,33 +22,21 @@ const showOffline = () => {
 };
 
 const showKickPlayer = () => {
-  const kickPlayer = `https://player.kick.com/${config.kickChannel}?muted=false`;
-  if (liveFrame) {
-    liveFrame.removeAttribute("hidden");
-    liveFrame.src = kickPlayer;
-  }
   if (offlineState) offlineState.hidden = true;
   liveRoot?.classList.add("is-live");
   if (liveLabel) liveLabel.textContent = "AO VIVO — Kick_";
-  window.setTimeout(() => {
-    const btn = document.getElementById("unmute-btn");
-    if (btn && liveFrame?.contentWindow) {
-      try { liveFrame.contentWindow.postMessage({ type: "kick:unmute" }, "*"); } catch {}
-    }
-  }, 2000);
 };
 
-document.getElementById("unmute-btn")?.addEventListener("click", function () {
-  this.style.display = "none";
-  try {
-    const iframe = document.getElementById("kick-player");
-    if (iframe && iframe.src) {
-      const current = new URL(iframe.src);
-      current.searchParams.delete("muted");
-      iframe.src = current.href;
-    }
-  } catch {}
-});
+const startOverlay = document.getElementById("start-overlay");
+
+const startLive = () => {
+  if (!liveFrame) return;
+  liveFrame.removeAttribute("hidden");
+  liveFrame.src = `https://player.kick.com/${config.kickChannel}`;
+  if (startOverlay) startOverlay.classList.add("is-hidden");
+};
+
+startOverlay?.addEventListener("click", startLive);
 
 const bootLive = () => {
   showKickPlayer();
