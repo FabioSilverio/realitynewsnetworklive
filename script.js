@@ -51,7 +51,7 @@ const showOffline = () => {
   if (liveFrame) { liveFrame.hidden = true; liveFrame.removeAttribute("src"); }
   resetPostMount();
   if (offlineState) offlineState.hidden = false;
-  if (liveLabel) liveLabel.textContent = "Broadcast offline_";
+  if (liveLabel) liveLabel.textContent = "Transmissao offline_";
 };
 
 const showPostEmbed = (url) => {
@@ -62,7 +62,7 @@ const showPostEmbed = (url) => {
   livePostMount.replaceChildren();
   liveRoot.classList.add("is-live");
   if (offlineState) offlineState.hidden = false;
-  if (liveLabel) liveLabel.textContent = "Broadcast embedded_";
+  if (liveLabel) liveLabel.textContent = "Transmissao embedada_";
   window.twttr.widgets.createTweet(postId, livePostMount, {
     align: "center", conversation: "none", dnt: true, theme: "dark"
   }).catch(() => showOffline());
@@ -76,7 +76,7 @@ const showLive = (url) => {
   liveFrame.hidden = false;
   offlineState.hidden = false;
   liveRoot.classList.add("is-live");
-  if (liveLabel) liveLabel.textContent = "Broadcast connected_";
+  if (liveLabel) liveLabel.textContent = "Transmissao conectada_";
 };
 
 if (openLink) openLink.href = broadcastUrl || fallbackXUrl;
