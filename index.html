@@ -42,8 +42,18 @@
               id="kick-player"
               title="Transmissao ao vivo RSN na Kick"
               allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+              allowfullscreen
               loading="eager"
             ></iframe>
+
+            <button class="unmute-btn" id="unmute-btn" type="button" aria-label="Ativar som">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 5 6 9H2v6h4l5 4V5Z"/>
+                <line x1="23" y1="9" x2="17" y2="15"/>
+                <line x1="17" y1="9" x2="23" y2="15"/>
+              </svg>
+              <span>Ativar som</span>
+            </button>
 
             <div class="offline-state" data-offline>
               <div class="offline-state__rings" aria-hidden="true">

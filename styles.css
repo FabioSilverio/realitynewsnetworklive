@@ -287,6 +287,42 @@ svg {
   display: none !important;
 }
 
+.unmute-btn {
+  position: absolute;
+  z-index: 3;
+  bottom: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--text);
+  background: rgba(0, 0, 0, 0.82);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.unmute-btn:hover {
+  background: rgba(57, 255, 122, 0.12);
+  border-color: var(--accent);
+}
+
+.unmute-btn svg {
+  color: var(--accent);
+}
+
+.video-shell:not(.is-live) .unmute-btn {
+  display: none;
+}
+
 .offline-state {
   position: relative;
   z-index: 1;
