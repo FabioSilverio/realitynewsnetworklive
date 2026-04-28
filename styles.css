@@ -536,8 +536,8 @@ svg {
 .chat-panel {
   display: grid;
   grid-template-rows: auto 1fr auto;
-  min-height: 480px;
-  max-height: calc(100vh - 140px);
+  min-height: 600px;
+  height: 100%;
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 6px;
@@ -675,6 +675,24 @@ svg {
   color: var(--text);
   background: rgba(0, 0, 0, 0.36);
   font: 700 0.74rem/1 var(--mono);
+}
+
+.chat-join-btn {
+  min-height: 32px;
+  padding: 0 14px;
+  border: 1px solid var(--green);
+  border-radius: 4px;
+  color: #061009;
+  background: var(--green);
+  font: 900 0.68rem/1 var(--mono);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.chat-join-btn.is-joined {
+  border-color: var(--line);
+  color: var(--green-2);
+  background: rgba(57, 255, 122, 0.1);
 }
 
 .chat-admin-toggle {

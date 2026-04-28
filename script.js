@@ -117,6 +117,7 @@ const chatMessages = document.querySelector("[data-chat-messages]");
 const chatInput = document.querySelector("[data-chat-input]");
 const chatSend = document.querySelector("[data-chat-send]");
 const chatUsername = document.querySelector("[data-chat-username]");
+const chatJoinBtn = document.querySelector("[data-chat-join]");
 const chatAdminToggle = document.querySelector("[data-chat-admin-toggle]");
 const chatEmojiBtn = document.querySelector("[data-chat-emoji-btn]");
 const chatEmojiPicker = document.querySelector("[data-chat-emoji-picker]");
@@ -126,13 +127,55 @@ let supabase = null;
 let isAdmin = localStorage.getItem(CHAT_ADMIN_KEY) === "1";
 let username = localStorage.getItem(CHAT_USERNAME_KEY) || "";
 
-if (chatUsername) {
-  chatUsername.value = username;
-  chatUsername.addEventListener("change", () => {
-    username = chatUsername.value.trim().slice(0, 20) || "Anon";
-    localStorage.setItem(CHAT_USERNAME_KEY, username);
-  });
-}
+const setJoinedState = () => {
+  if (!chatUsername || !chatJoinBtn) return;
+  if (username) {
+    chatUsername.value = username;
+    chatUsername.readOnly = true;
+    chatUsername.style.opacity = "0.7";
+    chatJoinBtn.textContent = username;
+    chatJoinBtn.classList.add("is-joined");
+  } else {
+    chatUsername.value = "";
+    chatUsername.readOnly = false;
+    chatUsername.style.opacity = "1";
+    chatJoinBtn.textContent = "Entrar";
+    chatJoinBtn.classList.remove("is-joined");
+  }
+};
+
+setJoinedState();
+
+chatJoinBtn?.addEventListener("click", () => {
+  const raw = chatUsername?.value.trim() || "";
+  if (!raw) return;
+
+  if (username) {
+    // Logout: trocar de nome
+    if (confirm("Trocar de apelido? Seus dados locais serao limpos.")) {
+      username = "";
+      localStorage.removeItem(CHAT_USERNAME_KEY);
+      isAdmin = false;
+      localStorage.removeItem(CHAT_ADMIN_KEY);
+      if (chatAdminToggle) chatAdminToggle.classList.remove("is-active");
+      setJoinedState();
+    }
+    return;
+  }
+
+  // Login
+  username = raw.slice(0, 20);
+  localStorage.setItem(CHAT_USERNAME_KEY, username);
+  setJoinedState();
+});
+
+chatUsername?.addEventListener("click", () => {
+  if (username && chatUsername.readOnly) {
+    if (confirm("Deseja trocar de apelido?")) {
+      chatJoinBtn?.click();
+    }
+  }
+});
 
 if (chatAdminToggle) {
   chatAdminToggle.classList.toggle("is-active", isAdmin);
@@ -143,6 +186,7 @@ if (chatAdminToggle) {
       chatAdminToggle.classList.remove("is-active");
       return;
     }
+    if (!username) return alert("Crie um apelido primeiro.");
     const pass = prompt("Senha de moderador:");
     if (pass === CHAT_ADMIN_PASSWORD) {
       isAdmin = true;
