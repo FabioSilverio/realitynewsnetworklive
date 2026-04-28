@@ -109,7 +109,7 @@ window.addEventListener("message", (event) => {
 });
 
 // ==================== CHAT ====================
-const CHAT_ADMIN_PASSWORD = "rsnmod";
+const CHAT_ADMIN_PASSWORD = "rsnsocial";
 const CHAT_USERNAME_KEY = "rsnChatUsername";
 const CHAT_ADMIN_KEY = "rsnChatAdmin";
 
