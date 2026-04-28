@@ -128,16 +128,14 @@
             </div>
             <div class="tweets-panel__embed">
               <div class="x-timeline-mount" data-x-timeline aria-label="Feed de @faaretz no X">
-              <a class="twitter-timeline"
-                 data-width="360"
-                 data-height="720"
-                 data-theme="dark"
-                 data-dnt="true"
-                 data-chrome="noheader nofooter noborders transparent noscrollbar"
-                 href="https://x.com/faaretz?ref_src=twsrc%5Etfw">
-                Tweets by @faaretz
-              </a>
-            </div>
+                <div class="tweets-loading" data-tweets-loading>
+                  <span class="tweets-loading__dot"></span>
+                  <span class="tweets-loading__dot"></span>
+                  <span class="tweets-loading__dot"></span>
+                  Carregando feed...
+                </div>
+                <div class="tweets-list" data-tweets-list hidden></div>
+              </div>
               <div class="feed-fallback" data-feed-fallback>
                 <a class="feed-card" href="https://x.com/faaretz" target="_blank" rel="noreferrer">
                   <span class="feed-card__meta">X feed · @faaretz</span>

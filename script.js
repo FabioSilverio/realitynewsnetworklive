@@ -171,39 +171,59 @@ window.addEventListener("message", (event) => {
   }
 });
 
-const hydrateTimeline = () => {
-  if (!tweetsPanel || !tweetsEmbed || !timelineMount) return;
-
-  const markHydrated = () => {
-    const iframe = timelineMount.querySelector("iframe[id^='twitter-widget'], iframe[src*='syndication.twitter.com']");
-    if (iframe) {
-      tweetsPanel.classList.add("is-hydrated");
-      return true;
-    }
-    return false;
-  };
-
-  if (window.twttr?.widgets?.load) {
-    window.twttr.widgets.load(timelineMount);
-  }
-
-  if (markHydrated()) return;
-
-  const observer = new MutationObserver(() => {
-    if (markHydrated()) observer.disconnect();
-  });
-
-  observer.observe(tweetsEmbed, { childList: true, subtree: true });
-
-  window.setTimeout(() => {
-    observer.disconnect();
-    markHydrated();
-  }, 8000);
+const formatTweetDate = (dateStr) => {
+  if (!dateStr) return "";
+  const d = new Date(dateStr);
+  if (isNaN(d)) return "";
+  return d.toLocaleDateString("pt-BR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
 };
 
-window.addEventListener("load", hydrateTimeline);
-window.setTimeout(hydrateTimeline, 1500);
-window.setTimeout(hydrateTimeline, 4000);
+const escapeHtml = (text) => {
+  const div = document.createElement("div");
+  div.textContent = text;
+  return div.innerHTML;
+};
+
+const loadTweets = async () => {
+  const list = document.querySelector("[data-tweets-list]");
+  const loading = document.querySelector("[data-tweets-loading]");
+  const fallback = document.querySelector("[data-feed-fallback]");
+
+  if (!list) return;
+
+  try {
+    const res = await fetch("/api/tweets");
+    const data = await res.json();
+
+    if (!data.tweets || data.tweets.length === 0) throw new Error("No tweets");
+
+    if (loading) loading.hidden = true;
+    list.hidden = false;
+
+    list.innerHTML = data.tweets
+      .map(
+        (t) => `
+      <a class="tweet-card" href="${escapeHtml(t.url)}" target="_blank" rel="noreferrer">
+        <div class="tweet-card__meta">
+          <span>@faaretz</span>
+          <time>${escapeHtml(formatTweetDate(t.date))}</time>
+        </div>
+        <p class="tweet-card__text">${escapeHtml(t.text)}</p>
+      </a>
+    `
+      )
+      .join("");
+
+    tweetsPanel?.classList.add("is-hydrated");
+    if (fallback) fallback.hidden = true;
+  } catch (err) {
+    if (loading) loading.hidden = true;
+    if (fallback) fallback.hidden = false;
+    console.log("Tweet fetch failed, showing fallback", err);
+  }
+};
+
+window.addEventListener("load", loadTweets);
 
 adminForm?.addEventListener("submit", (event) => {
   event.preventDefault();

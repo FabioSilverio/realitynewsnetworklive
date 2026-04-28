@@ -582,6 +582,78 @@ svg {
   height: 720px !important;
 }
 
+.tweets-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 40px 20px;
+  color: var(--dim);
+  font-size: 0.78rem;
+}
+
+.tweets-loading__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: bounce 1.4s ease-in-out infinite;
+}
+
+.tweets-loading__dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.tweets-loading__dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+  0%, 80%, 100% {
+    transform: scale(0.6);
+    opacity: 0.4;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.tweets-list {
+  display: grid;
+  gap: 1px;
+  max-height: 720px;
+  overflow-y: auto;
+}
+
+.tweet-card {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.2);
+  transition: background 0.15s;
+}
+
+.tweet-card:hover {
+  background: rgba(57, 255, 122, 0.04);
+}
+
+.tweet-card__meta {
+  display: flex;
+  justify-content: space-between;
+  color: var(--dim);
+  font-size: 0.68rem;
+}
+
+.tweet-card__text {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.82rem;
+  line-height: 1.55;
+  word-break: break-word;
+}
+
 .admin-gate {
   position: fixed;
   inset: 0;
