@@ -90,11 +90,50 @@ const showKickFallback = () => {
   showLive(kickPlayer);
 };
 
+const showAoVivo = (xUrl) => {
+  // Carrega player do Kick direto
+  showKickFallback();
+  
+  // Mantem overlay sutil com link pro X
+  if (offlineState) {
+    offlineState.hidden = false;
+    // Forca visibilidade mesmo com is-live
+    offlineState.style.opacity = "1";
+    offlineState.style.pointerEvents = "auto";
+    offlineState.style.background = "rgba(0,0,0,0.6)";
+    
+    const h1 = offlineState.querySelector("h1");
+    if (h1) h1.textContent = "AO VIVO";
+    const p = offlineState.querySelector("p");
+    if (p) p.textContent = "Player via Kick. Clique abaixo para abrir no X.";
+    const a = offlineState.querySelector("a");
+    if (a) {
+      a.textContent = "Assistir no X";
+      a.href = xUrl;
+      a.style.position = "relative";
+      a.style.zIndex = "3";
+    }
+    // Esconde os aneis e o botao play (ja tem player)
+    const rings = offlineState.querySelector(".offline-state__rings");
+    if (rings) rings.hidden = true;
+    const playBtn = offlineState.querySelector(".play-button");
+    if (playBtn) playBtn.hidden = true;
+  }
+  
+  if (liveLabel) liveLabel.textContent = "AO VIVO — player via Kick_";
+};
+
 let lastLiveUrl = readLiveUrl();
 
 const bootLive = (targetUrl) => {
   const url = normalizeBroadcastUrl(targetUrl || readLiveUrl());
-  if (!url) { showOffline(); return; }
+  if (!url) {
+    showOffline();
+    // Sem URL, tenta Kick direto
+    if (liveLabel) liveLabel.textContent = "Tentando Kick.com..._";
+    showKickFallback();
+    return;
+  }
 
   if (openLink) openLink.href = url || fallbackXUrl;
   openXButtons.forEach((btn) => { btn.onclick = () => window.open(url || fallbackXUrl, "_blank", "noopener,noreferrer"); });
@@ -105,24 +144,23 @@ const bootLive = (targetUrl) => {
     return;
   }
 
-  // X broadcast (/i/broadcasts/) → converter pra player pscp.tv que aceita iframe
-  const broadcastId = getBroadcastId(url);
-  if (broadcastId) {
-    showLive(`https://www.pscp.tv/w/${broadcastId}`);
-    window.setTimeout(() => {
-      if (!liveFrame?.contentWindow) {
-        // Player do X falhou, tenta Kick como fallback
-        if (liveLabel) liveLabel.textContent = "X bloqueou, tentando Kick..._";
-        showKickFallback();
-      }
-    }, 3500);
+  // Status do X — embed tweet (que contem o player)
+  if (getPostId(url)) {
+    if (showPostEmbed(url)) return;
+    window.setTimeout(() => showPostEmbed(url) || showAoVivo(url), 2500);
     return;
   }
 
-  // Status do X — embed tweet com player
-  if (getPostId(url)) {
-    if (showPostEmbed(url)) return;
-    window.setTimeout(() => showPostEmbed(url) || showKickFallback(), 2500);
+  // Broadcast do X — tenta iframe (as vezes funciona), fallback pro Kick
+  const broadcastId = getBroadcastId(url);
+  if (broadcastId) {
+    // Tenta carregar no iframe (funciona em alguns navegadores com cookies do X)
+    showLive(url);
+    window.setTimeout(() => {
+      if (!liveFrame?.contentWindow || liveFrame.contentWindow.document?.body?.innerHTML === "") {
+        showAoVivo(url);
+      }
+    }, 3000);
     return;
   }
 
