@@ -121,35 +121,24 @@
             <span class="youtube-banner__button">Subscribe</span>
           </a>
 
-          <section class="tweets-panel" aria-labelledby="tweets-title">
-            <div class="tweets-panel__top">
-              <h2 id="tweets-title">X @faaretz</h2>
-              <a href="https://x.com/faaretz" target="_blank" rel="noreferrer">Follow</a>
+          <section class="chat-panel" aria-labelledby="chat-title">
+            <div class="chat-panel__top">
+              <h2 id="chat-title">Chat da Live</h2>
+              <span class="chat-panel__count" data-chat-count>0 online</span>
             </div>
-            <div class="tweets-panel__embed">
-              <div class="x-timeline-mount" data-x-timeline aria-label="Feed de @faaretz no X">
-                <a class="twitter-timeline"
-                   data-height="720"
-                   data-theme="dark"
-                   data-chrome="noheader nofooter noborders transparent"
-                   href="https://x.com/faaretz?ref_src=twsrc%5Etfw">
-                  Tweets by @faaretz
-                </a>
+            <div class="chat-panel__messages" data-chat-messages aria-label="Mensagens do chat"></div>
+            <div class="chat-panel__composer">
+              <div class="chat-user-bar">
+                <input class="chat-username" data-chat-username type="text" placeholder="Apelido" maxlength="20" value="" />
+                <button class="chat-admin-toggle" data-chat-admin-toggle title="Entrar como admin">👤</button>
               </div>
-              <div class="feed-fallback" data-feed-fallback hidden>
-                <a class="feed-card" href="https://x.com/faaretz" target="_blank" rel="noreferrer">
-                  <span class="feed-card__meta">X feed · @faaretz</span>
-                  <strong>O X nao liberou posts para este embed.</strong>
-                  <small>Isso acontece quando o perfil/broadcast exige login, bloqueia embeds ou o widget oficial carrega vazio.</small>
-                </a>
-                <a class="feed-card feed-card--compact" href="https://x.com/faaretz/with_replies" target="_blank" rel="noreferrer">
-                  <span class="feed-card__meta">Replies</span>
-                  <strong>Ver posts e respostas</strong>
-                </a>
-                <a class="feed-card feed-card--compact" href="https://x.com/faaretz/media" target="_blank" rel="noreferrer">
-                  <span class="feed-card__meta">Media</span>
-                  <strong>Ver imagens e videos</strong>
-                </a>
+              <div class="chat-input-row">
+                <button class="chat-emoji-btn" data-chat-emoji-btn type="button" title="Emojis">😀</button>
+                <input class="chat-input" data-chat-input type="text" placeholder="Digite uma mensagem..." maxlength="280" autocomplete="off" />
+                <button class="chat-send" data-chat-send type="button">Enviar</button>
+              </div>
+              <div class="chat-emoji-picker" data-chat-emoji-picker hidden>
+                <span>😀</span><span>😂</span><span>🥳</span><span>🔥</span><span>❤️</span><span>👍</span><span>👎</span><span>😮</span><span>😢</span><span>😡</span><span>🎉</span><span>💀</span><span>🤔</span><span>👀</span><span>🙏</span><span>💪</span><span>🚀</span><span>🇧🇷</span><span>🎯</span><span>🍿</span><span>☕</span><span>🍺</span><span>💰</span><span>📉</span><span>📈</span><span>🗳️</span><span>🤡</span><span>🤝</span><span>✅</span><span>❌</span>
               </div>
             </div>
           </section>
@@ -181,6 +170,7 @@
     </div>
 
     <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.47.10/dist/umd/supabase.min.js"></script>
     <script src="script.js"></script>
   </body>
 </html>
