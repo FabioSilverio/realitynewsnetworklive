@@ -255,10 +255,15 @@ svg {
   height: 100%;
   border: 0;
   background: #000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s;
 }
 
 .video-shell.is-live .live-frame {
-  z-index: 1;
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 2;
 }
 
 .video-shell.is-live::after {
