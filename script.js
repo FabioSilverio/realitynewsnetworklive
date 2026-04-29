@@ -277,3 +277,47 @@ const updateOnlineCount = async () => {
 };
 
 window.addEventListener("load", initChat);
+
+// ==================== BLOG ====================
+const blogGrid = document.querySelector("[data-blog-grid]");
+
+const formatDate = (iso) => {
+  try {
+    const d = new Date(iso);
+    return d.toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" });
+  } catch { return ""; }
+};
+
+const renderBlogPost = (post) => {
+  const a = document.createElement("a");
+  a.className = "blog-card";
+  a.href = post.link;
+  a.target = "_blank";
+  a.rel = "noreferrer";
+  a.innerHTML = `
+    <span class="blog-card__tag">tropical punk</span>
+    <h3 class="blog-card__title">${post.title}</h3>
+    <p class="blog-card__desc">${post.description}</p>
+    <span class="blog-card__date">${formatDate(post.date)}</span>
+    <span class="blog-card__arrow">Ler &rarr;</span>
+  `;
+  return a;
+};
+
+const loadBlog = async () => {
+  if (!blogGrid) return;
+  try {
+    const res = await fetch("/api/blog");
+    if (!res.ok) throw new Error("API error");
+    const { items } = await res.json();
+    if (!items.length) return;
+    blogGrid.innerHTML = "";
+    items.forEach((post) => {
+      blogGrid.appendChild(renderBlogPost(post));
+    });
+  } catch {
+    blogGrid.innerHTML = `<p style="color:var(--dim);font-size:0.78rem;">Nao foi possivel carregar os posts. <a href="https://fabiosilverio.substack.com" target="_blank" rel="noreferrer" style="color:var(--green);">Abrir no Substack</a></p>`;
+  }
+};
+
+window.addEventListener("load", () => { setTimeout(loadBlog, 800); });
