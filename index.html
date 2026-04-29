@@ -21,7 +21,15 @@
 
         <nav class="nav" aria-label="Navegacao principal">
           <a class="nav__link nav__link--active" href="#top">Live</a>
-          <a class="nav__link" href="#blog">Blog</a>
+          <span class="nav__link-wrapper">
+            <a class="nav__link" href="#blog">Blog</a>
+            <div class="blog-toast" data-blog-toast hidden>
+              <div class="blog-toast__pulse" aria-hidden="true"></div>
+              <p class="blog-toast__text">Leia sobre TV no blog da RSN</p>
+              <a class="blog-toast__cta" href="#blog">Ver posts</a>
+              <button class="blog-toast__close" data-blog-toast-close type="button" aria-label="Fechar">&times;</button>
+            </div>
+          </span>
         </nav>
 
         <div class="on-air" aria-label="Status da transmissao">
@@ -137,7 +145,7 @@
 
       <section id="blog" class="blog-section" aria-labelledby="blog-heading">
         <div class="blog-section__header">
-          <h2 id="blog-heading" class="terminal-label">Blog — tropical punk_</h2>
+          <h2 id="blog-heading" class="terminal-label">Blog — RSN_</h2>
           <a class="blog-section__substack-link" href="https://fabiosilverio.substack.com" target="_blank" rel="noreferrer">
             Ler no Substack
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17 17 7M9 7h8v8"/></svg>

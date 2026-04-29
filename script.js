@@ -295,7 +295,7 @@ const renderBlogPost = (post) => {
   a.target = "_blank";
   a.rel = "noreferrer";
   a.innerHTML = `
-    <span class="blog-card__tag">tropical punk</span>
+    <span class="blog-card__tag">RSN</span>
     <h3 class="blog-card__title">${post.title}</h3>
     <p class="blog-card__desc">${post.description}</p>
     <span class="blog-card__date">${formatDate(post.date)}</span>
@@ -321,3 +321,35 @@ const loadBlog = async () => {
 };
 
 window.addEventListener("load", () => { setTimeout(loadBlog, 800); });
+
+// ==================== BLOG TOAST ====================
+const blogToast = document.querySelector("[data-blog-toast]");
+const blogToastClose = document.querySelector("[data-blog-toast-close]");
+const BLOG_TOAST_KEY = "rsnBlogToastDismissed";
+const BLOG_TOAST_INTERVAL = 30 * 60 * 1000;
+
+const showBlogToast = () => {
+  if (!blogToast) return;
+  blogToast.hidden = false;
+  window.setTimeout(() => { blogToast.hidden = true; }, 12000);
+};
+
+const dismissBlogToast = () => {
+  if (!blogToast) return;
+  blogToast.hidden = true;
+  localStorage.setItem(BLOG_TOAST_KEY, Date.now().toString());
+};
+
+blogToastClose?.addEventListener("click", dismissBlogToast);
+
+const scheduleBlogToast = () => {
+  const last = parseInt(localStorage.getItem(BLOG_TOAST_KEY) || "0", 10);
+  const elapsed = Date.now() - last;
+  const delay = Math.max(0, BLOG_TOAST_INTERVAL - elapsed);
+  window.setTimeout(() => {
+    showBlogToast();
+    window.setInterval(showBlogToast, BLOG_TOAST_INTERVAL);
+  }, delay);
+};
+
+scheduleBlogToast();
